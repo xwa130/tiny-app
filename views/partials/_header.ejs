@@ -1,0 +1,13 @@
+<% if(user_id) { %>
+  <p>
+    Hello <%= user_id['email'] %>.
+  </p>
+  Go to: <a href = '/urls'> My links </a>.
+  <form method = 'post' action = '/logout'>
+    <input type = 'submit' value = 'Log out'> <br>
+  </form>
+<% } else { %>
+      Sorry, you have not logged in. You can log in
+      <a href = '/login'> here </a>. Or you can register
+      <a href = '/register'> here </a>.
+<% } %>

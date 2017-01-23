@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp</title>
+</head>
+<body>
+    <%- include('partials/_header'); %>
+    <!-- Add your EJS code here -->
+    <% for (let key in userUrls) { %>
+      <a href='<%= userUrls[key] %>'><%= key %></a> :
+      <a href='<%= userUrls[key] %>'><%= userUrls[key] %></a>
+        <br>
+        <a href = '/urls/<%= key %>'>
+          <button> Edit</button>
+        </a>
+        <div>
+          <form method="post" action="/urls/<%= key %>/delete">
+            <button>Delete</button>
+          </form>
+        </div>
+    <% } %>
+    You can also shorten your long url
+    <a href = '/urls/new'> here </a>.
+</body>
+</html>
