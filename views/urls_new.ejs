@@ -2,6 +2,8 @@
 <html lang="en">
   <head></head>
   <body style="font-size:20px; padding:50px;">
+    <!-- Partial needs user_id parameter
+    which is declared by res.locals.user_id  -->
     <%- include('partials/_header'); %>
     <form action="/urls" method="post" style="margin:150px;">
       <label for="longURL">Enter a URL:</label>

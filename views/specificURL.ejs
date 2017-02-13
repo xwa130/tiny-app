@@ -2,6 +2,8 @@
 <html lang="en">
   <head></head>
   <body>
+    <!-- Partial needs user_id parameter
+    which is declared by res.locals.user_id  -->
     <%- include('partials/_header'); %>
     <%= requestURL %>: <%= userUrls[requestURL] %>
     <form action="/urls/<%= requestURL %>" method="post" style="margin:150px;">
