@@ -18,9 +18,3 @@ module.exports = () => {
 
   return [urlDatabase, userDatabase];
 }
-
-
-
-
-
-
