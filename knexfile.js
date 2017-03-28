@@ -14,7 +14,7 @@ module.exports = {
     },
     migrations: {
       directory: './db/migrations',
-      tableName: 'knex_migrations'
+      tableName: 'tiny-app-migrations'
     },
     seeds: {
       directory: './db/seeds'
