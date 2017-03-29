@@ -1,11 +1,9 @@
-const express = require('express');
-const urlsRoutes = express.Router();
+const router = require('express').Router();
 const helper = require('../lib/serverHelper.js');
-const [urlDatabase, userDatabase] = require('../db/db.js')();
 
 module.exports = () => {
 
-  urlsRoutes.get("/", function (req, res) {
+  router.get("/", function (req, res) {
     if (!req.session.user_id) {
       res.status(401);
       res.send("You have not logged in, please log in <a href = '/login'>here</a>.");
@@ -17,7 +15,7 @@ module.exports = () => {
     }
   });
 
-  urlsRoutes.get('/new', function (req, res) {
+  router.get('/new', function (req, res) {
     if (req.session.user_id) {
       res.status(200);
       res.render("urls_new");
@@ -27,7 +25,7 @@ module.exports = () => {
     }
   });
 
-  urlsRoutes.get('/:id', function (req, res) {
+  router.get('/:id', function (req, res) {
     if (!req.params.id) {
       res.status(404);
       res.end('Can not find your website.');
@@ -51,7 +49,7 @@ module.exports = () => {
   });
 
   // Add a new url to the user's account
-  urlsRoutes.post('/', function (req, res) {
+  router.post('/', function (req, res) {
     if (req.session.user_id) {
       let shortenedURL = helper.generateRandomString(6);
       let userName = req.session.user_id.id;
@@ -66,7 +64,7 @@ module.exports = () => {
   });
 
   // Update the url
-  urlsRoutes.post('/:id', function (req, res) {
+  router.post('/:id', function (req, res) {
     if (!req.params.id) {
       res.status(404);
       res.end('Can not find your website.');
@@ -88,7 +86,7 @@ module.exports = () => {
   });
 
   // Delete a url
-  urlsRoutes.post('/:id/delete', function (req, res) {
+  router.post('/:id/delete', function (req, res) {
     if (!req.params.id) {
       res.status(404);
       res.end('Can not find your website.');
@@ -109,5 +107,5 @@ module.exports = () => {
     }
   });
 
-  return urlsRoutes;
+  return router;
 };

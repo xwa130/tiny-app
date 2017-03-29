@@ -7,7 +7,6 @@ const urlsRoutes = require('./routes/urls')();
 const loginRoutes = require('./routes/login')();
 const registerRoutes = require('./routes/register')();
 const helper = require('./lib/serverHelper.js');
-const [urlDatabase, userDatabase] = require('./db/db.js')();
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
