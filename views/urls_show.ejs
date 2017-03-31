@@ -5,12 +5,12 @@
     <!-- Partial needs user_id parameter
     which is declared by res.locals.user_id  -->
     <%- include('partials/_header'); %>
-    <%= requestURL %>: <%= userUrls[requestURL] %>
-    <form action="/urls/<%= requestURL %>" method="post" style="margin:150px;">
+    <%= result[0].short %>: <%= result[0].long %>
+    <form action="/urls/<%= result[0].id %>" method="post" style="margin:150px;">
       <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
       <input type="submit" value="Update">
     </form>
-    <form action="/urls/<%= requestURL %>/delete" method="post" style="margin:150px;">
+    <form action="/urls/<%= result[0].id %>/delete" method="post" style="margin:150px;">
       <input type="submit" value="Delete">
     </form>
   </body>

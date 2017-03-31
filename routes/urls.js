@@ -1,110 +1,110 @@
 const router = require('express').Router();
-const helper = require('../lib/serverHelper.js');
 
-module.exports = () => {
-
-  router.get("/", function (req, res) {
-    if (!req.session.user_id) {
-      res.status(401);
-      res.send("You have not logged in, please log in <a href = '/login'>here</a>.");
+module.exports = (database) => {
+  // index
+  router.get("/", function (req, res, next) {
+    if (req.session.user) {
+      database.indexUrls(req.session.user.id, (result) => {
+        res.render('urls_index', {'result': result});
+      });
     } else {
-      let templateVars = {};
-      templateVars.userUrls = urlDatabase[req.session.user_id.id];
-      res.status(200);
-      res.render('urls_index', templateVars);
+      next();
     }
+  }, function (req, res) {
+       res.status(401);
+       res.send("You have not logged in, please log in <a href = '/login'>here</a>.");
   });
-
-  router.get('/new', function (req, res) {
-    if (req.session.user_id) {
+  //new
+  router.get('/new', function (req, res, next) {
+    if (req.session.user) {
       res.status(200);
       res.render("urls_new");
     } else {
-      res.status(401);
-      res.send("You have not logged in, please log in <a href = '/login'>here</a>.");
+      next();
     }
+  }, function (req, res) {
+       res.status(401);
+       res.send("You have not logged in, please log in <a href = '/login'>here</a>.");
   });
-
-  router.get('/:id', function (req, res) {
+  // show
+  router.get('/:id', function (req, res, next) {
     if (!req.params.id) {
       res.status(404);
       res.end('Can not find your website.');
-    }
-
-    if (req.session.user_id) {
-      let templateVars = {};
-      templateVars.userUrls = urlDatabase[req.session.user_id.id];
-      templateVars.requestURL = req.params.id;
-      if (templateVars.userUrls.hasOwnProperty(req.params.id)){
-        res.status(200);
-        res.render('urls_show', templateVars);
-      } else {
-        res.status(403);
-        res.send('You did not create this short url, please check your <a href = "/urls"> links </a>');
-      }
     } else {
+      next();
+    }
+  }, function (req, res, next) {
+    if (req.session.user) {
+      database.showUrl(req.params.id, (result) => {
+        if (result.length !== 0) {
+          res.status(200);
+          res.render('urls_show', {'result': result});
+        } else {
+          res.status(403);
+          res.send('You did not create this short url, please check your <a href = "/urls"> links </a>');
+        }
+      });
+    } else {
+      next();
+    }
+  }, function (req, res) {
       res.status(401);
       res.send("You have not logged in, please log in <a href = '/login'>here</a>.");
-    }
   });
-
-  // Add a new url to the user's account
+  // Create
   router.post('/', function (req, res) {
-    if (req.session.user_id) {
-      let shortenedURL = helper.generateRandomString(6);
-      let userName = req.session.user_id.id;
-      console.log('database is ', urlDatabase);
-      console.log(urlDatabase[userName]);
-      urlDatabase[userName][shortenedURL] = req.body.longURL;
-      res.redirect("/urls/" + shortenedURL);
+    if (req.session.user) {
+      database
+        .createUrl(req)
+        .then(() => {
+          res.redirect('/urls');
+        });
     } else {
       res.status(401);
       res.send("You have not logged in, please log in <a href = '/login'>here</a>.");
     }
   });
-
-  // Update the url
-  router.post('/:id', function (req, res) {
+  // Update
+  router.post('/:id', function (req, res, next) {
     if (!req.params.id) {
       res.status(404);
       res.end('Can not find your website.');
+    } else {
+      next();
     }
-    if (req.session.user_id) {
-      let urls = urlDatabase[req.session.user_id.id];
-      if (urls.hasOwnProperty(req.params.id)){
-        res.status(200);
-        urls[req.params.id] = req.body.longURL;
-        res.redirect('/urls/' + req.params.id);
-      } else {
-        res.status(403);
-        res.send('You did not register this short url, please check your <a href = "/urls"> links </a>');
-      }
+  }, function (req, res) {
+    if (req.session.user) {
+      database
+        .updateUrl(req)
+        .then(() => {
+          res.redirect('/urls/' + req.params.id);
+        });
     } else {
       res.status(401);
       res.send("You have not logged in, please log in <a href = '/login'>here</a>.");
     }
   });
-
-  // Delete a url
-  router.post('/:id/delete', function (req, res) {
+  // Delete
+  router.post('/:id/delete', function (req, res, next) {
     if (!req.params.id) {
       res.status(404);
       res.end('Can not find your website.');
-    }
-    if (req.session.user_id) {
-      let urls = urlDatabase[req.session.user_id.id];
-      if (urls.hasOwnProperty(req.params.id)){
-        res.status(200);
-        delete urls[req.params.id];
-        res.redirect('/urls');
-      } else {
-        res.status(403);
-        res.send('You did not register this short url, please check your <a href = "/urls"> links </a>');
-      }
     } else {
-      res.status(401);
-      res.send("You have not logged in, please log in <a href = '/login'>here</a>.");
+      next();
     }
+  }, function (req, res, next) {
+    if (req.session.user) {
+      database.deleteUrl(req)
+        .then(() => {
+          res.redirect('/urls');
+        });
+    } else {
+      next();
+    }
+  }, function (req, res) {
+    res.status(401);
+    res.send("You have not logged in, please log in <a href = '/login'>here</a>.");
   });
 
   return router;

@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>TinyApp</title>
-</head>
-<body>
+  <head>
+    <title>TinyApp</title>
+  </head>
+  <body>
     <!-- Partial needs user_id parameter
     which is declared by res.locals.user_id  -->
     <%- include('partials/_header'); %>
     <!-- Add your EJS code here -->
-    <% for (let key in userUrls) { %>
-      <a href='<%= userUrls[key] %>'><%= key %></a> :
-      <a href='<%= userUrls[key] %>'><%= userUrls[key] %></a>
-        <br>
-      <a href = '/urls/<%= key %>'>
-        <button> Edit</button>
-      </a>
-      <div>
-        <form method="post" action="/urls/<%= key %>/delete">
-          <button>Delete</button>
-        </form>
-      </div>
+    <% if (result.length !== 0) { %>
+      <% result.map(function(ele) { %>
+        <a href='<%= ele.long %>'><%= ele.short %></a> :
+        <a href='<%= ele.long %>'><%= ele.long %></a>
+          <br>
+        <a href = '/urls/<%= ele.id %>'>
+          <button> Edit </button>
+        </a>
+        <div>
+          <form method="post" action="/urls/<%= ele.id %>/delete">
+            <button>Delete</button>
+          </form>
+        </div>
+        <div>
+          You can also shorten your long url
+          <a href = '/urls/new'> here </a>.
+        </div>
+      <% }) %>
+    <% } else { %>
+      You have not created your own urls. You can shorten your long url
+      <a href = '/urls/new'> here </a>.
     <% } %>
-    You can also shorten your long url
-    <a href = '/urls/new'> here </a>.
-</body>
+  </body>
 </html>

@@ -1,6 +1,6 @@
-<% if(user_id) { %>
+<% if(user) { %>
   <p>
-    Hello <%= user_id['email'] %>.
+    Hello <%= user.username %>.
   </p>
   Go to: <a href = '/urls'> My links </a>.
   <form method = 'post' action = '/login/delete'>

@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 module.exports = (database) => {
   router.get('/', function (req, res) {
-    if (req.session.user_id) {
+    if (req.session.user) {
       res.redirect('/');
     } else {
       res.status(200);
@@ -13,8 +13,8 @@ module.exports = (database) => {
   router.post('/', function (req, res) {
     database.registerCheckEmailExistence(req.body.email, (bool) => {
       if (bool) {
-        database.createUser(req, (id) => {
-          req.session.user_id = id;
+        database.createUser(req, (user) => {
+          req.session.user = user;
           res.redirect('/');
         });
       } else {

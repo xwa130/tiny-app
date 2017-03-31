@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 module.exports = (database) => {
   router.get('/', function (req, res) {
-    if (req.session.user_id) {
+    if (req.session.user) {
       res.redirect('/');
     } else {
       res.status(200);
@@ -11,9 +11,9 @@ module.exports = (database) => {
   });
 
   router.post('/', function (req, res) {
-    database.authLogin(req.body.email, req.body.password, (id) => {
-      if(id) {
-        req.session.user_id = id;
+    database.authLogin(req.body.email, req.body.password, (user) => {
+      if(user) {
+        req.session.user = user;
         res.redirect('/');
       } else {
         res.status(401).send('You are not a user, please <a href = "/register"> register </a> first.');
@@ -22,7 +22,7 @@ module.exports = (database) => {
   });
 
   router.post('/delete', function (req, res) {
-    req.session.user_id = null;
+    req.session.user = null;
     res.redirect('/');
   });
 
