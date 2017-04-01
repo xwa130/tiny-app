@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 module.exports = (database) => {
+  // new
   router.get('/', function (req, res) {
     if (req.session.user) {
       res.redirect('/');
@@ -9,7 +10,7 @@ module.exports = (database) => {
       res.render('login');
     }
   });
-
+  // create
   router.post('/', function (req, res) {
     database.authLogin(req.body.email, req.body.password, (user) => {
       if(user) {
@@ -20,7 +21,7 @@ module.exports = (database) => {
       }
     });
   });
-
+  // delete
   router.post('/delete', function (req, res) {
     req.session.user = null;
     res.redirect('/');

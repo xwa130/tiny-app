@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 module.exports = (database) => {
+  // new
   router.get('/', function (req, res) {
     if (req.session.user) {
       res.redirect('/');
@@ -9,7 +10,7 @@ module.exports = (database) => {
       res.render('register');
     }
   });
-
+  // create
   router.post('/', function (req, res) {
     database.registerCheckEmailExistence(req.body.email, (bool) => {
       if (bool) {

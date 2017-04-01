@@ -1,13 +1,18 @@
 require('dotenv').config();
 
-const knexConfig = require('../../knexfile.js');
+const knexConfig = require('../knexfile.js');
 const knex = require('knex')(knexConfig[process.env.ENV]);
 const shortid = require('shortid');
 
+function  addHTTPHeadIfNo(url) {
+  return (url.indexOf("http://") !== 0 || url.indexOf("https://") !== 0) ? 'http://' + url : url;
+}
+
 function formUrl(req) {
+  let longURL = addHTTPHeadIfNo(req.body.longURL);
   return {
     'short': shortid(),
-    'long': req.body.longURL,
+    'long': longURL,
     'user_id': req.session.user.id
   };
 }
